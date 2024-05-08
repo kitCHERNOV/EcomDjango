@@ -38,6 +38,15 @@ class Order(models.Model):
         return str(self.id)
 
     @property
+    def shipping(self):
+        shipping = False
+        orderitems = self.orderitem_set.all() # Запрашиваем все элементы заказа
+        for i in orderitems:
+            if i.product.digital == False:
+                shipping = True
+        return  shipping
+
+    @property
     def get_cart_total(self):
         orderitems = self.orderitem_set.all()
         total = sum([item.get_total for item in orderitems])
@@ -57,7 +66,7 @@ class OrderItem(models.Model):
 
     @property
     def get_total(self):
-        total = self.product.price * self.quantity
+        total = float(format(self.product.price * self.quantity, '.2f'))
         return total
 
 class ShippingAddress(models.Model):
