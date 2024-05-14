@@ -5,6 +5,8 @@
         <div class="col-lg-6">
             <div class="box-element" id="form-wrapper">
                 <form id="form">
+<!--                добавим маркер в форму-->
+                    {% csrf_token %}
                     <div id="user-info">
                         <div class="form-field">
                             <input required class="form-control" type="text" name="name" placeholder="Name..">
@@ -16,7 +18,7 @@
 
                     <div id="shipping-info">
                         <hr>
-                        <p>Shipping Information</p>
+                        <p>Shipping Information:</p>
                         <hr>
                         <div class="form-field">
                             <input class="form-control" type="text" name="address" placeholder="Address..">
@@ -89,6 +91,10 @@
 
         // добавим обработчик событий
         var form = document.getElementById('form')
+
+        csrftoken = form.getElementsByTagName("input")[0].value
+        console.log('Newtoken:', form.getElementsByTagName("input")[0].value)
+
         form.addEventListener('submit', function(e){ //
             e.preventDefault()
             console.log('Form Submitted...')
@@ -126,10 +132,17 @@
             if (user == 'AnonymousUser'){
                 userFormData.name = form.name.value
                 userFormData.email = form.email.value
+                // if (form.name.value == null)
+                //     try {
+                //         userFormData.name = form.name.value
+                //         userFormData.email = form.email.value
+                //     }finally {
+                        
+                //     }
             }
 
-            // console.log('Shipping Info:', shippingInfo)
-            // console.log('User Info:', userFormData)
+            console.log('Shipping Info:', shippingInfo)
+            console.log('User Info:', userFormData)
 
             var url = "/process_order/"
             fetch(url, {
@@ -138,7 +151,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrftoken,
                 },
-                body:JSON.stringify({ 'form': userFormData, 'shipping': shippingInfo}),
+                body:JSON.stringify({ 'form': userFormData, 'shipping': shippingInfo})
             })
 
             .then((response) => response.json())
@@ -146,6 +159,10 @@
             .then((data) => {
                 console.log('Success:', data);
                 alert('Transaction comleted');
+
+                cart = {}
+                document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
                 window.location.href = "{% url 'store' %}"
             })
         }
