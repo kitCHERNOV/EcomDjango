@@ -83,7 +83,9 @@
         </ul>
          <div class="form-inline my-2 my-lg-0">
 
-     	    <a href="#"class="btn btn-warning">Login</a>
+     	    <a class="navbar-log" href="{% url 'login' %}"><!--class="btn btn-warning"-->
+                <button class="navbar-log" type="button">Login</button>
+            </a>
 
      	    <a href="{% url 'cart' %}">
     		    <img  id="cart-icon" src="{% static 'images/ccart.png' %}">
