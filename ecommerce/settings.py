@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_REDIRECT_URL = 'store'  # Имя URL-адреса, на который вы хотите перенаправить пользователя после входа
 
 # Application definition
 

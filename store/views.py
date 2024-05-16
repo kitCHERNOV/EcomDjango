@@ -6,7 +6,9 @@ import datetime
 from .utils import cookieCart, cartData, guestOrder
 from django.shortcuts import render, redirect
 # from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import logout, authenticate
+from django.contrib.auth import login as djlogin
+from django.contrib.auth.models import User
 
 def store(request):
 
@@ -106,38 +108,70 @@ def processOrder(request):
 # Create your views here.
 
 
-# def signup(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             auth_login(request, user)
-#             return redirect('home')  # перенаправить на вашу домашнюю страницу
-#     else:
-#         form = UserCreationForm()
-#     return render(request, 'registration/signup.html', {'form': form})
+def signup(request):
+
+    if request.POST:
+        print(request.POST)
+        username = request.POST['username']
+        password = request.POST['password']
+        email = request.POST['email']
+
+        # Создайте пользователя и сохраните его в базе данных
+        user = User.objects.create_user(username, email, password)
+
+
+
+        # user = authenticate(request, username=username, password=password)
+        if user is not None:
+            djlogin(request, user=user)
+            return redirect('store') # отправит нас на главную страницу
+    return render(request, 'store/signup.html')
 
 # def login(request):
 #     if request.method == 'POST':
-#         form = AuthenticationForm(request, data=request.POST)
-#         if form.is_valid():
-#             user = form.get_user()
-#             auth_login(request, user)
-#             return redirect('home')  # перенаправить на вашу домашнюю страницу
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         user = authenticate(request, username=username, password=password)  # Проверяем аутентификацию пользователя
+#         if user is not None:
+#             djlogin(request, user)  # Аутентифицируем пользователя
+#             # После успешной аутентификации, выполните необходимые действия, например, перенаправление на другую страницу
+#             return redirect('home')  # Замените 'home' на имя вашего URL-шаблона
+#         else:
+#             # Если аутентификация не удалась, покажите сообщение об ошибке или форму для повторной попытки входа
+#             return render(request, 'login.html', {'error_message': 'Invalid username or password'})
 #     else:
-#         form = AuthenticationForm()
-#     return render(request, 'registration/login.html', {'form': form})
-
-# def logout(request):
-#     auth_logout(request)
-#     return redirect('home')  # перенаправить на вашу домашнюю страницу
-
+#         # Если запрос не является POST, отобразите форму входа
+#         return render(request, 'login.html')
 
 def login(request):
+
     if request.POST:
+        print(request.POST)
         username = request.POST['username']
         password = request.POST['password']
+
         user = authenticate(request, username=username, password=password)
+        if user is not None:
+            djlogin(request, user=user)
+            return redirect('store') # отправит нас на главную страницу
+    return render(request, 'store/login.html')
+
+# class Login(DataMixin, LoginView):
+#     form_class = LoginUserForm
+#     template_name = 'women/login.html'
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         c_def = self.get_user_context(title="Авторизация")
+#         return dict(list(context.items()) + list(c_def.items()))
+#
+#     def get_success_url(self):
+#         return reverse_lazy('home')
+
+
+# def logout(request):
+#     logout(request)
+#     return redirect('login')
 
 # def logout(request):
 #     logout(request)

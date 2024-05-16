@@ -43,7 +43,14 @@ def cookieCart(request):
 
 def cartData(request):
     if request.user.is_authenticated:
-        customer = request.user.customer
+        try:
+            customer = request.user.customer
+        except AttributeError:
+            # customer = None
+            user = request.user  # Получаем текущего пользователя
+            # # Создаем новый объект Customer, связанный с текущим пользователем
+            customer = Customer.objects.create(user=user, name=user.username, email=user.email)
+
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()  # Получим все элементы заказа для которого этот заказ является родительским
         cartItems = order.get_cart_items
