@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth import login as djlogin
 from django.contrib.auth.models import User
+from django.views.decorators.http import require_POST
 
 def store(request):
 
@@ -37,11 +38,12 @@ def checkout(request):
     cartItems = data['cartItems']
     order = data['order']
     items = data['items']
-    wallet, created = Wallet.objects.get_or_create(user=request.user,defaults={'debit':10000.00,'credit':1000.00})
-    waldebit = wallet.debit
-    walcredit = wallet.credit
+    # wallet, created = Wallet.objects.get_or_create(user=request.user,defaults={'debit':10000.00,'credit':1000.00})
+    # waldebit = wallet.debit
+    # walcredit = wallet.credit
 
-    context = {'items': items, 'order': order, 'cartItems': cartItems, 'debit':waldebit, 'credit':walcredit}
+    context = {'items': items, 'order': order, 'cartItems': cartItems}#, #'debit':waldebit, 'credit':walcredit}
+    # updateWallet(request)
     return render(request, 'store/checkout.html', context)
 
 
@@ -116,9 +118,7 @@ def processOrder(request):
             zipcode=data['shipping']['zipcode'],
         )
 
-        return JsonResponse('Payment complete!', safe=False)
-    else:
-        return JsonResponse('Not enough funds in wallet', safe=False)
+    return JsonResponse('Payment complete!', safe=False)
 # Create your views here.
 
 
@@ -174,5 +174,11 @@ def LogoutView(request):
     logout(request)
 
     return redirect('store')
-
+#
+# def updateWallet(request):
+#     wallet, created = Wallet.objects.get_or_create(user=request.user, defaults={'debit': 10000.00, 'credit': 1000.00})
+#     # data = cartData(request)
+#     # for i in data['items']:
+#     wallet.credit = 100
+#     wallet.debit = 100
 

@@ -43,9 +43,9 @@
             </div>
 
             <br>
-            <div class="box-element hidden" id="payment-data">
-                Balance:{{debit}}
-            </div>
+<!--            <div class="box-element hidden" id="payment-data">-->
+<!--                Balance:{{debit}}-->
+<!--            </div>-->
             <div class="box-element hidden" id="payment-info">
                 <small>Payment Options</small>
                 <button id="make-payment">Make payment</button>
@@ -104,7 +104,7 @@
             console.log('Form Submitted...')
             document.getElementById('form-button').classList.add("hidden");
             document.getElementById('payment-info').classList.remove("hidden");
-            document.getElementById('payment-data').classList.remove("hidden");
+           // document.getElementById('payment-data').classList.remove("hidden");
         })
 
         document.getElementById('make-payment').addEventListener('click', function(e){
@@ -165,7 +165,6 @@
                 console.log('Success:', data);
                 if (data == 'Payment complete!') {
                     alert('Transaction comleted');
-
                     cart = {}
                     document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
 
