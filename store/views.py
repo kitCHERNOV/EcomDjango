@@ -117,13 +117,13 @@ def signup(request):
         email = request.POST['email']
 
         # Создайте пользователя и сохраните его в базе данных
-        user = User.objects.create_user(username, email, password)
+        user = User.objects.create_user(username=username, email=email, password=password)
 
 
 
         # user = authenticate(request, username=username, password=password)
         if user is not None:
-            djlogin(request, user=user)
+        #     djlogin(request, user=user)
             return redirect('store') # отправит нас на главную страницу
     return render(request, 'store/signup.html')
 

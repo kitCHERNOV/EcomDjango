@@ -42,6 +42,8 @@ def cookieCart(request):
 
 
 def cartData(request):
+    # if request.user.is_authenticated:
+        # customer = request.user.customer
     if request.user.is_authenticated:
         try:
             customer = request.user.customer

@@ -10,10 +10,10 @@
 </head>
 <body>
 	<div class="container">
-	<form method="POST" action="{% url 'login' %}">
+	<form method="POST" action="{% url 'signup' %}">
 		{% csrf_token %}
 	  <div class="mb-3">
-	    <label for="exampleInputEmail1" class="form-label">Username</label>
+	    <label for="exampleInputUsername" class="form-label">Username</label>
 	    <input name="username" type="text" class="form-control" id="exampleInputUsername">
 	  </div>
 
