@@ -37,8 +37,11 @@ def checkout(request):
     cartItems = data['cartItems']
     order = data['order']
     items = data['items']
+    wallet, created = Wallet.objects.get_or_create(user=request.user,defaults={'debit':10000.00,'credit':1000.00})
+    waldebit = wallet.debit
+    walcredit = wallet.credit
 
-    context = {'items': items, 'order': order, 'cartItems': cartItems}
+    context = {'items': items, 'order': order, 'cartItems': cartItems, 'debit':waldebit, 'credit':walcredit}
     return render(request, 'store/checkout.html', context)
 
 
@@ -82,7 +85,16 @@ def processOrder(request):
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-
+        # wallet, created = Wallet.objects.get_or_create(user=request.user,
+        #                                                defaults={
+        #                                                    'debit':10000.00,
+        #                                                    'credit':1000.00
+        #                                                })
+        # print(wallet.debit)
+        # total = float(data['form']['total'])
+        # wallet.debit -= total
+        # print(wallet.debit)
+        # wallet.reset_funds()
 
     else:
         customer, order = guestOrder(request, data)
@@ -104,7 +116,9 @@ def processOrder(request):
             zipcode=data['shipping']['zipcode'],
         )
 
-    return JsonResponse('Payment submitted..', safe=False)
+        return JsonResponse('Payment complete!', safe=False)
+    else:
+        return JsonResponse('Not enough funds in wallet', safe=False)
 # Create your views here.
 
 
@@ -156,23 +170,9 @@ def login(request):
             return redirect('store') # отправит нас на главную страницу
     return render(request, 'store/login.html')
 
-# class Login(DataMixin, LoginView):
-#     form_class = LoginUserForm
-#     template_name = 'women/login.html'
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         c_def = self.get_user_context(title="Авторизация")
-#         return dict(list(context.items()) + list(c_def.items()))
-#
-#     def get_success_url(self):
-#         return reverse_lazy('home')
+def LogoutView(request):
+    logout(request)
+
+    return redirect('store')
 
 
-# def logout(request):
-#     logout(request)
-#     return redirect('login')
-
-# def logout(request):
-#     logout(request)
-#     return redirect('home')  # перенаправить на вашу домашнюю страницу

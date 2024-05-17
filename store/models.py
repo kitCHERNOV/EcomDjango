@@ -81,3 +81,20 @@ class ShippingAddress(models.Model):
     def __str__(self):
         return self.address
 
+class Wallet(models.Model):
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    debit = models.DecimalField(max_digits=7, decimal_places=2) # Поле будет отвечать за число монеток на счет
+    credit = models.DecimalField(max_digits=7, decimal_places=2) # допустимый лимит кредита
+
+    def __str__(self):
+        return f"Wallet of {self.user.username}"
+
+    def get_balance(self):
+        return self.debit, self.credit # Будем возвращать данные по дебету и кредиту
+
+    def reset_funds(self):
+        self.debit = 10000
+        self.credit = 1000
+        self.save()
+
+

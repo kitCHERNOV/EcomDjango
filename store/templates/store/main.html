@@ -83,13 +83,32 @@
         </ul>
          <div class="form-inline my-2 my-lg-0">
 
-            <a class="navbar-log" href="{% url 'login' %}"><!--class="btn btn-warning"-->
-                <button class="navbar-log" type="button">Login</button>
-            </a>
+<!--            <a class="navbar-log" href="{% url 'login' %}">&lt;!&ndash;class="btn btn-warning"&ndash;&gt;-->
+<!--                <button class="navbar-log" type="button">Login</button>-->
+<!--            </a>-->
 
-     	    <a class="navbar-log" href="{% url 'signup' %}"><!--class="btn btn-warning"-->
-                <button class="navbar-log" type="button">Sign up</button>
-            </a>
+<!--     	    <a class="navbar-log" href="{% url 'signup' %}">&lt;!&ndash;class="btn btn-warning"&ndash;&gt;-->
+<!--                <button class="navbar-log" type="button">Sign up</button>-->
+<!--            </a>-->
+
+             <body>
+                <nav>
+                    <!-- Используем условные теги Django для проверки состояния пользователя -->
+                    {% if user.is_authenticated %}
+                        <!-- Кнопка Logout для аутентифицированных пользователей -->
+                        <a class="navbar-log" href="{% url 'logout' %}">
+                            <button class="navbar-log" type="button">Logout</button>
+                        </a>
+                    {% else %}
+                        <!-- Кнопки Login и Sign up для анонимных пользователей -->
+                        <a class="navbar-log" href="{% url 'login' %}">
+                            <button class="navbar-log" type="button">Login</button>
+                        </a>
+                        <a class="navbar-log" href="{% url 'signup' %}">
+                            <button class="navbar-log" type="button">Sign up</button>
+                        </a>
+                    {% endif %}
+                </nav>
 
      	    <a href="{% url 'cart' %}">
     		    <img  id="cart-icon" src="{% static 'images/ccart.png' %}">

@@ -11,5 +11,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', views.signup, name='signup'),
     path('login/', views.login, name='login'),
-    # path('logout/', views.logout, name='logout'),
+    path('logout/', views.LogoutView, name='logout'),
+    # path('update_wallet/', views.update_wallet, name='update_wallet'),
 ]
